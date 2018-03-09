@@ -1,7 +1,7 @@
 <template>
   <div>
+    <carousel></carousel>
     <el-container>
-      <carousel></carousel>
       <el-main>
         <ui v-bind="articles">
           <li class="shadow" v-for="article in articles" v-bind:key="article.index">
@@ -12,37 +12,51 @@
             <p>{{ article.article_content }}</p>
             <br>
             <span><i class="el-icon-view"></i>{{ article.click }}</span>
-            <span class="right"><i class="el-icon-date"></i>{{ article.article_date | date_only }}</span>
+            <span class="right"><i class="el-icon-date"></i>{{ article.article_date }}</span>
           </li>
         </ui>
       </el-main>
-      <el-footer>底部栏</el-footer>
     </el-container>
+    <pagination></pagination>
   </div>
 </template>
 
 <script>
 import Carousel from './Carousel.vue'
+import Pagination from './Pagination.vue'
 export default {
     data(){
         return {
-            articles: [
-                {'article_title': '默认博客', 'article_content': '表示axios请求没收到数据'},
-            ]
+            articles: this.$store.state.articles
         }
     },
-    components: { Carousel },
-    mounted() {
-        this.$axios.get("http://127.0.0.1:8800/api/v1.0/articles")
+    components: { Carousel, Pagination },
+    methods:{
+      get_article_list(){
+        var page = this.$store.state.page;
+        var per_page = this.$store.state.per_page;
+        if (typeof(page) === "undefined"){
+          var query = ""
+          }
+        else{
+          var query = "?page=" + page + "&per_page=" + per_page
+        };
+        alert(query);
+        this.$axios.get("http://127.0.0.1:8800/api/v1.0/articles" + query)
         .then(response => {
-            this.articles = response.data
+          this.$store.commit("change_article_list",{ articles: response.data.articles })
+          alert(response.data.count)
+          this.$store.commit("change_total",{ total: response.data.count })
+          this.$data.articles = this.$store.state.articles
         })
-    },
-    filters: {
-      date_only(datetime) {
-        return datetime.split(" ")[0]
       }
-    }
+    },
+    mounted() {
+      this.get_article_list()
+    },
+    watch:{
+      '$store.state.page':'get_article_list'
+  }
 }
 </script>
 
@@ -76,13 +90,17 @@ export default {
 </style>
 
 <style>
-  .el-footer {
+  .el-pagination {
     border-radius: 5px;
+    padding: 15px;
     margin: 0px 10px 10px 10px;
     background-color: #B3C0D1;
-    color: #333;
-    text-align: center;
-    line-height: 60px;
+  }
+  .el-pagination .btn-next, .el-pagination .btn-prev, .el-pager li,.el-pagination button.disabled {
+    background-color: #B3C0D1;
+  }
+  .el-pagination button.disabled {
+    color: #303133;
   }
   .el-main {
     color: #333;
