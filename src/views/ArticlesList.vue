@@ -45,8 +45,9 @@ export default {
         this.$axios.get("http://127.0.0.1:8800/api/v1.0/articles" + query)
         .then(response => {
           this.$store.commit("change_article_list",{ articles: response.data.articles })
-          alert(response.data.count)
+          alert(this.$store.state.articles)
           this.$store.commit("change_total",{ total: response.data.count })
+          alert(this.$store.state.total)
           this.$data.articles = this.$store.state.articles
         })
       }

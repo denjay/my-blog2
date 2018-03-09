@@ -17,7 +17,7 @@ export default new vuex.Store({
         change_article_list(state,data){
             state.articles = data.articles
         },
-        change_total(state,date){
+        change_total(state,data){
             state.total = data.total
         }
     }
