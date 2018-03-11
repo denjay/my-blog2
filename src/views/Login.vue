@@ -37,6 +37,7 @@ export default {
       .then(response => {
         if (response.status === 200) {
           localStorage.token = response.headers['authorization'];
+          this.$store.state.token = response.headers['authorization'];
           localStorage.username = this.form.username;
           this.$message({
             message: '登录成功！正在跳转到首页',

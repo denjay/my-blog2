@@ -35,19 +35,19 @@ export default {
       get_article_list(){
         var page = this.$store.state.page;
         var per_page = this.$store.state.per_page;
+        // alert(page)
         if (typeof(page) === "undefined"){
           var query = ""
           }
         else{
           var query = "?page=" + page + "&per_page=" + per_page
         };
-        alert(query);
         this.$axios.get("http://127.0.0.1:8800/api/v1.0/articles" + query)
         .then(response => {
           this.$store.commit("change_article_list",{ articles: response.data.articles })
-          alert(this.$store.state.articles)
+          // alert(this.$store.state.articles)
           this.$store.commit("change_total",{ total: response.data.count })
-          alert(this.$store.state.total)
+          // alert(this.$store.state.total)
           this.$data.articles = this.$store.state.articles
         })
       }

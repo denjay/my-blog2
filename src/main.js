@@ -15,16 +15,20 @@ Vue.config.productionTip = false
 // http request 拦截器，在请求头中带上令牌
 axios.interceptors.request.use(
   config => {
-      if (localStorage.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
-          config.headers.Authorization = localStorage.token;
-          // 这种方法也行
-          // axios.defaults.headers.common['Authorization'] = localStorage.token;
-      }
-      return config;
+    if (store.state.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+      config.headers.Authorization = store.state.token;
+      // 这种方法也行
+      // axios.defaults.headers.common['Authorization'] = store.state.token;
+    }
+    else if (localStorage.token) {
+      store.commit('change_page', { token: localStorage.token})
+      config.headers.Authorization = store.state.token;
+    }
+    return config;
   },
   err => {
-      return Promise.reject(err);
-});
+    return Promise.reject(err);
+  });
 
 /* eslint-disable no-new */
 new Vue({

@@ -15,15 +15,22 @@
   export default {
     methods: {
       handleCurrentChange(val) {
-        this.$store.commit('change_page',{ page: this.$data.currentPage, per_page: this.$data.per_page })
+        this.$store.commit('change_page',{ page: this.currentPage, per_page: this.$data.per_page })
       }
     },
     data() {
       return {
-        per_page: 3,
-        currentPage: 1,
-        total: this.$store.state.total
+        per_page: this.$store.state.per_page,
+        currentPage: this.$store.state.page
       };
+    },
+    computed: {
+        total(){
+          return this.$store.state.total
+        },
+        currentPage(){
+          return this.$store.state.page
+        }
     }
   }
 </script>

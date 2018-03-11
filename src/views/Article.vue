@@ -43,8 +43,12 @@ export default {
       },
       article:{},
       comments: {},
-      loggedIn: false,
-      username: '',
+      username: ''
+    }
+  },
+  computed:{
+    loggedIn(){
+      return this.$store.state.token ? true : false;
     }
   },
   methods:{
